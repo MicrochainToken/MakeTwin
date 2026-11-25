@@ -1,7 +1,6 @@
 # Manual walkthroughs
 
-The primary deliverable is a continuous named clip, `how_to_use`, with source-evidenced
-instructions and chapters in the export manifest. Each chapter inherits the previous
+The model and part metadata are the primary deliverables. Demonstrate them with a continuous named clip, `how_to_use`, with evidence-labeled instructions and chapters in the export manifest. Each chapter inherits the previous
 state. Independent clips remain optional exploration controls. Never implement the
 guide by autoplaying independent clips that each reset to rest.
 
@@ -29,9 +28,7 @@ ordinary `anim.sequence` retains its rest-at-zero contract. Nest fixed joint fra
 using `joints.frame`, preserving the pivots and axes. Never use teleporting or hidden
 parts to bypass a blocked physical step.
 
-The shared viewer provides guide selection, Play/Pause, Previous/Next (seek and
-pause), Replay step, Restart, and a progress slider. Real-world pauses stop at their
-chapter boundary until Play is pressed. Previous/Next seek the full timeline;
+The shared viewer provides guide selection, Play/Pause, Previous/Next (play the selected chapter), Replay step, Restart, and a progress slider. Ordinary playback respects chapter pauses; Play full tour explicitly plays continuously through them. Previous/Next play a chapter and stop at its end;
 they do not instruct users to reverse a real-world procedure. Switching to
 independent exploration stops the guide and restores the baseline before playing.
 

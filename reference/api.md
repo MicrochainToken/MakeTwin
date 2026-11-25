@@ -122,7 +122,7 @@ Set it per call (`ease=`), per sequence key (`(1.0, 90, "settle")`) or per guide
 (`ease="out"`, or a dict `{joint: ease}` for different targets in one step). `turn` uses
 `linear` for `loops > 1`. Never use `settle` where an overshoot would hit another part.
 
-## Continuous manual guides (v4)
+## Continuous manual guides
 
 `g = anim.guide(clip="how_to_use", title="How to use", initial_state="assembled_off", initial=None)`
 creates a stateful authoring builder. `initial` optionally maps joints/glows to initial numeric values.
@@ -132,7 +132,7 @@ appends an ordered chapter. Use degrees/metres for joints, 0/1 for glow intensit
 Targets not changed in the next step retain their values; a caption-only step uses no targets.
 `g.finish()` writes the continuous clip and chapter metadata. Do not author another preset
 on the same target/clip. The source/locator must be checked against the provided evidence.
-Read `manual-guides.md`; copy both viewer files with the exported manifest.
+Read `manual-guides.md`; retain all viewer assets and licenses copied by the exporter alongside the manifest.
 
 ## Directed cameras
 
