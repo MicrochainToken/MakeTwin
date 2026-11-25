@@ -2,7 +2,7 @@
 
 All notable changes are documented here. This project follows [Semantic Versioning](https://semver.org).
 
-## [1.0.1] - Unreleased
+## [1.0.1] - 2026-11-25
 
 ### Fixed
 - Wrap download and playback controls on narrow screens so navigation remains accessible.

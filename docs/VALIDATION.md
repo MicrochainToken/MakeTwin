@@ -1,4 +1,4 @@
-# Validation status — v1.0.1 release candidate
+# Validation status — v1.0.1
 
 The deliverable is a named-part Blender/glTF model plus parts.json with functions,
 evidence, assemblies, interfaces, attachments and supported movement. The viewer
