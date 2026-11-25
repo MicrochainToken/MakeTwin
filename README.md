@@ -1,6 +1,6 @@
 <div align="center">
 
-<h4 align="center"><img src="assets/maketwin-logo.png" width="112" alt="MakeTwin logo" /><br /><img src="assets/"MakeTwin wordmark.svg"" width="260" alt="MakeTwin" /></h4>
+<h4 align="center"><img src="assets/maketwin-logo.png" width="112" alt="MakeTwin logo" /><br /><img src="assets/MakeTwin_wordmark.svg" width="260" alt="MakeTwin" /></h4>
 
 **Your digital product explorer.**
 
