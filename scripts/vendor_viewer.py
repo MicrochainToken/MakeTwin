@@ -32,6 +32,9 @@ def main():
  imports={'three':'./'+names['build/three.module.js']}
  for path in ENTRY[1:]:imports['three/addons/'+path[len('examples/jsm/'):]]='./'+names[path]
  p=folder/'index.html';s=p.read_text();s=re.sub(r'<script type="importmap">.*?</script>','<script type="importmap">'+json.dumps({'imports':imports})+'</script>',s,count=1,flags=re.S);p.write_text(s)
- (folder/'vendor-sources.json').write_text(json.dumps({'package':'three@0.169.0','base':BASE,'rewrittenLocalModuleHashes':hashes,'license':'THREE-LICENSE.txt'},indent=2)+'\n')
+ earcut_url='https://raw.githubusercontent.com/mapbox/earcut/v2.2.4/LICENSE'
+ with urllib.request.urlopen(earcut_url,timeout=45) as r:(folder/'EARCUT-LICENSE.txt').write_bytes(r.read())
+ embedded=[dict(package='earcut@2.2.4',source='https://github.com/mapbox/earcut/tree/v2.2.4',license='EARCUT-LICENSE.txt',licenseSource=earcut_url,bundledIn='vendor-build-three.module.js')]
+ (folder/'vendor-sources.json').write_text(json.dumps({'package':'three@0.169.0','base':BASE,'rewrittenLocalModuleHashes':hashes,'license':'THREE-LICENSE.txt','embeddedDependencies':embedded},indent=2)+'\n')
  print(json.dumps({'vendoredModules':len(raw),'networkRequiredByViewer':False}))
 if __name__=='__main__':main()

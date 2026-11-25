@@ -7,6 +7,29 @@ import tempfile
 VIEWER_DIR = Path(__file__).resolve().parents[1] / "templates/viewer"
 PREVIEW_FILES = frozenset({"model.glb", "model.manifest.json", "explorer.json", "explosion-audit.json"})
 
+REQUIRED_VIEWER_FILES = (
+    'EARCUT-LICENSE.txt',
+    'THREE-LICENSE.txt',
+    'camera-director.js',
+    'camera-views.json',
+    'explorer-controller.js',
+    'explorer-state.js',
+    'explorer.css',
+    'guide-core.js',
+    'guide-player.js',
+    'guide.css',
+    'index.html',
+    'maketwin-logo.png',
+    'maketwin.css',
+    'reference-ui.css',
+    'showcase-state.js',
+    'vendor-build-three.module.js',
+    'vendor-examples-jsm-controls-OrbitControls.js',
+    'vendor-examples-jsm-environments-RoomEnvironment.js',
+    'vendor-examples-jsm-loaders-GLTFLoader.js',
+    'vendor-examples-jsm-utils-BufferGeometryUtils.js',
+    'vendor-sources.json',
+)
 
 def viewer_assets():
     """Return the portable viewer files shared by all product deliveries."""

@@ -8,5 +8,14 @@
     "vendor-examples-jsm-environments-RoomEnvironment.js": "85869bdd22f7cf0b22e68dcefe6cb710480af0f5c901a76f7a7764fd07fc8014",
     "vendor-examples-jsm-utils-BufferGeometryUtils.js": "c25b7930e570e9ec56173cd3b866ec8d2e10016630db3937efb439daf1cedbf6"
   },
-  "license": "THREE-LICENSE.txt"
+  "license": "THREE-LICENSE.txt",
+  "embeddedDependencies": [
+    {
+      "package": "earcut@2.2.4",
+      "source": "https://github.com/mapbox/earcut/tree/v2.2.4",
+      "license": "EARCUT-LICENSE.txt",
+      "licenseSource": "https://raw.githubusercontent.com/mapbox/earcut/v2.2.4/LICENSE",
+      "bundledIn": "vendor-build-three.module.js"
+    }
+  ]
 }

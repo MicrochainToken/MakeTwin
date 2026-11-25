@@ -51,7 +51,17 @@ class CleanInstallTests(unittest.TestCase):
                 self.assertIn('mechanical-explorer-test/examples/generic/build.py', files)
                 self.assertFalse(any('/evaluations/' in f or '/.git/' in f or 'storyboard' in f or 'draft' in f or f.endswith(('.glb', '.pyc')) for f in files))
                 manifest = json.loads(z.read('mechanical-explorer-test/PACKAGE-MANIFEST.json'))
-                self.assertIn('SKILL.md', manifest)
+                self.assertIn('SKILL.md', manifest['files'])
             self.assertEqual(len(report['sha256']), 64)
             with self.assertRaises(ValueError):
                 package_skill.package(out, root)
+
+class ViewerInstallTests(unittest.TestCase):
+    def test_missing_runtime_dependency_is_required(self):
+        with tempfile.TemporaryDirectory() as tmp, patch.object(doctor, 'ROOT', Path(tmp)), patch.object(doctor, 'find_blender', return_value=None):
+            checks, _ = doctor.inspect()
+        for name in ('vendor-build-three.module.js', 'explorer-controller.js', 'EARCUT-LICENSE.txt'):
+            check = next(c for c in checks if c['name'] == 'viewer/' + name)
+            self.assertTrue(check['required'])
+            self.assertFalse(check['available'])
+        self.assertFalse(next(c for c in checks if c['name'] == 'Viewer vendor integrity')['available'])

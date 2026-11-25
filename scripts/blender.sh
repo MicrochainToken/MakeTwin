@@ -3,28 +3,6 @@
 # Output is quiet by default: the full log goes to $C3D_LOG_DIR (default ./.c3d-logs) and only
 # [c3d] summary lines and errors are printed. Set C3D_VERBOSE=1 to see everything.
 set -euo pipefail
-# Inside an agent sandbox where Blender cannot start (macOS seatbelt), an external launcher may start a
-# broker and set C3D_BROKER_DIR: hand the request to it and wait for the result.
-if [ -n "${C3D_BROKER_DIR:-}" ] && [ -z "${C3D_IN_BROKER:-}" ]; then
-  id="$(date +%s)-$$-$RANDOM"
-  python3 - "$C3D_BROKER_DIR/req-$id.json" "$PWD" "$@" <<'PY'
-import json, os, sys
-path, cwd, argv = sys.argv[1], sys.argv[2], sys.argv[3:]
-tmp = path + ".tmp"
-with open(tmp, "w") as fh:
-    json.dump({"cwd": cwd, "argv": argv}, fh)
-os.rename(tmp, path)
-PY
-  for _ in $(seq 1 14400); do
-    if [ -f "$C3D_BROKER_DIR/res-$id.code" ]; then
-      cat "$C3D_BROKER_DIR/res-$id.out"
-      exit "$(cat "$C3D_BROKER_DIR/res-$id.code")"
-    fi
-    sleep 0.25
-  done
-  echo "[c3d] Blender broker did not answer within an hour" >&2
-  exit 124
-fi
 find_blender() {
   if [ -n "${BLENDER:-}" ] && [ -x "$BLENDER" ]; then echo "$BLENDER"; return; fi
   if command -v blender >/dev/null 2>&1; then command -v blender; return; fi

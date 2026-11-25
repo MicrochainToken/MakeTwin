@@ -10,7 +10,8 @@ import subprocess
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-VIEWER_FILES = ('index.html', 'guide-core.js', 'guide.css', 'guide-player.js', 'camera-director.js', 'camera-views.json')
+from delivery_files import REQUIRED_VIEWER_FILES
+VIEWER_FILES = REQUIRED_VIEWER_FILES
 
 
 def find_blender():
@@ -53,6 +54,17 @@ def inspect(agent=False):
     add('Node.js 22+', node_ok, agent, 'Install Node.js 22+ and put node on PATH.')
     for name in VIEWER_FILES:
         add('viewer/' + name, (ROOT / 'templates/viewer' / name).is_file(), True, 'Use the complete Skill folder, including templates/viewer/.')
+    import hashlib
+    try:
+        record = json.loads((ROOT / 'templates/viewer/vendor-sources.json').read_text())
+        hashes = record['rewrittenLocalModuleHashes']
+        expected = {name for name in VIEWER_FILES if name.startswith('vendor-') and name.endswith('.js')}
+        intact = set(hashes) == expected and all(
+            hashlib.sha256((ROOT / 'templates/viewer' / name).read_bytes()).hexdigest() == digest
+            for name, digest in hashes.items())
+    except (OSError, ValueError, KeyError, TypeError):
+        intact = False
+    add('Viewer vendor integrity', intact, True, 'Restore vendor files and vendor-sources.json from the same release.')
     return checks, blender
 
 
@@ -72,7 +84,20 @@ def smoke(out, blender):
             r = subprocess.run(command, cwd=out, env=env, stdout=log, stderr=subprocess.STDOUT, timeout=600)
         if r.returncode:
             raise RuntimeError(f'Smoke step {i} failed; inspect {out / ("step-" + str(i) + ".log")}')
-    missing = [n for n in ('model.blend', 'model.glb', 'model.manifest.json', *VIEWER_FILES) if not (out / n).is_file()]
+    import shutil
+    for name in ('parts.json', 'explorer.json', 'PLAN.md', 'build.py'):
+        shutil.copy2(ROOT / 'examples/mini-oven' / name, out / name)
+    from validate_parts import validate
+    from audit_explosion import audit
+    manifest = json.loads((out / 'model.manifest.json').read_text())
+    for filename, report in (
+        ('parts-audit.json', validate(manifest, json.loads((out / 'parts.json').read_text()))),
+        ('explosion-audit.json', audit(manifest, json.loads((out / 'explorer.json').read_text()), 1)),
+    ):
+        (out / filename).write_text(json.dumps(report, indent=2) + '\n')
+        if not report['passed']:
+            raise RuntimeError(f'Example metadata failed: {filename}')
+    missing = [n for n in ('parts.json', 'explorer.json', 'model.blend', 'model.glb', 'model.manifest.json', *VIEWER_FILES) if not (out / n).is_file()]
     if missing:
         raise RuntimeError('Missing smoke outputs: ' + ', '.join(missing))
     return dict(passed=True, output=str(out), model='model.glb', note='Deterministic generic example only; no AI/provider calls, product reconstruction or human acceptance.')
