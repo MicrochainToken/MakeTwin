@@ -1,0 +1,43 @@
+const assert=require('node:assert/strict');
+global.stepIndex=require('../templates/viewer/camera-director.js').stepIndex;
+const {createGuidePlayer}=require('../templates/viewer/guide-player.js');
+class Element{constructor(tag){this.tag=tag;this.children=[];this.textContent='';this.style={};}setAttribute(){}append(...x){this.children.push(...x);}prepend(x){this.children.unshift(x);}remove(){this.removed=true;}}
+global.document={createElement:tag=>new Element(tag)};
+class Value{constructor(v=0){this.v=v;}clone(){return new Value(this.v);}copy(x){this.v=x.v;return this;}}
+const objects=[{position:new Value(),quaternion:new Value(),scale:new Value(1)}, {position:new Value(7),quaternion:new Value(),scale:new Value(1)}];
+const root={traverse:fn=>objects.forEach(fn),updateMatrixWorld(){}};
+let active=null;
+const mixer={stopAllAction(){active=null;},clipAction(clip){const a={time:0,reset(){return this;},setLoop(){},play(){active=this;return this;},clip};return a;},update(){if(active)objects[0].position.v=active.clip.pose(active.time);}};
+const clips=[{name:'guide',duration:5,pose:t=>10+t},{name:'single',duration:2,pose:t=>t}];
+const guides=[{clip:'guide',title:'Demo',steps:[{instruction:'Open',startSeconds:0,motionStartSeconds:1,actionEndSeconds:2,endSeconds:3,pauseAfter:true},{instruction:'Close',startSeconds:3,motionStartSeconds:4,actionEndSeconds:4.5,endSeconds:5}]}];
+let directorTime=0,resets=0,sampled=null;
+const director={select(steps,sample){sampled=sample;resets++;},reset(){resets++;directorTime=0;},update(t){directorTime=t;sampled?.(Math.max(0,t-.2));},getBounds(){return objects[0].position.v;},auto(t){this.resumed=t;},dispose(){this.disposed=true;}};
+const container=new Element('div');
+const p=createGuidePlayer({THREE:{LoopOnce:1},mixer,root,clips,guides,container,director});
+const controls=container.children[0].children[3];
+const click=name=>controls.children.find(b=>b.textContent===name).onclick();
+assert.equal(objects[0].position.v,10,'guide nonzero initial state');
+click('Play');p.update(3.8);assert.equal(p.time,3);assert.equal(p.playing,false,'real-world pause stops at boundary');
+assert.equal(objects[0].position.v,13,'sampling camera does not leave physical pose in the past');
+click('Next');assert.equal(p.time,4,'chapter seek arrives at authored action shot');
+click('Replay step');assert.equal(p.time,3);assert.equal(p.playing,true);
+p.update(.4);click('Pause');p.update(1);assert.equal(p.time,3.4);
+click('Auto view');assert.equal(director.resumed,3.4);
+click('Restart');assert.equal(p.time,0);assert.equal(p.playing,false);assert.equal(directorTime,0);
+p.select('single');assert.equal(objects[0].position.v,0,'switching clips restores assembled baseline');
+assert.equal(objects[1].position.v,7,'untargeted baseline preserved');
+click('Play');p.update(10);assert.equal(p.time,2);assert.equal(p.playing,false);
+click('Reverse');p.update(.5);assert.equal(p.time,1.5);p.update(2);assert.equal(p.time,0);assert.equal(p.playing,false);
+p.select('guide');p.seek(2.25);const pose=objects[0].position.v;p.seek(5);p.seek(2.25);assert.equal(objects[0].position.v,pose);
+p.dispose();assert.equal(objects[0].position.v,0);assert.equal(director.disposed,true);
+// Page-driven mode (ui:false), used by the guide page: no panel, step-only playback, speed, notifications.
+let changes=0;
+const h=createGuidePlayer({THREE:{LoopOnce:1},mixer,root,clips,guides,director,ui:false,onChange:()=>changes++});
+assert.equal(h.guide.title,'Demo');assert.equal(h.stepIndex(),0);assert.ok(changes>0,'notifies on select');
+h.playStep(1);assert.equal(h.time,3);assert.equal(h.playing,true);
+h.update(10);assert.equal(h.playing,false,'step-only playback stops at the step end');
+assert.equal(h.stepIndex(),1,'stays on the played step');assert.ok(h.time<5&&h.time>4.99);
+h.speed=2;h.playStep(0);h.update(.5);assert.equal(h.time,1,'speed scales playback');
+h.pause();assert.equal(h.playing,false);h.toggle();assert.equal(h.playing,true);
+h.restart();assert.equal(h.time,0);h.speed=1;h.playAll();h.update(3.8);assert.equal(h.time,3.8,'full tour crosses authored chapter pauses');assert.equal(h.playing,true);h.update(5);assert.equal(h.time,5);assert.equal(h.playing,false);h.playStep(0);h.update(4);assert.ok(h.time<3,'manual step mode still stops at its chapter');h.dispose();
+console.log('shared guide/clip player: state isolation, chapter seek/replay, pause, reverse, restart, camera sample restoration and disposal pass');

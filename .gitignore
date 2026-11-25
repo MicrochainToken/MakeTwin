@@ -1,0 +1,16 @@
+.venv/
+.env
+.env.*
+.codex/
+.cache/
+__pycache__/
+output/
+.c3d-logs/
+.DS_Store
+*.blend
+*.blend1
+*.glb
+*.zip
+!templates/viewer/model.glb
+test-output/
+*.zip

@@ -1,0 +1,2 @@
+# Contact-sheet generation; geometry uses Blender’s bundled Python.
+Pillow>=10
