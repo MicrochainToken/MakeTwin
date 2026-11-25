@@ -41,17 +41,18 @@ def join(objs):
 
 
 fail = []
+preferred_solver = "MANIFOLD" if bpy.app.version >= (4, 5, 0) else "EXACT"
 core.reset_scene(product_size=(0.1, 0.1, 0.1))
 
-# 1. closed solid minus closed solid: MANIFOLD only, removes the hole's volume
+# 1. Closed solids use the supported preferred solver and remove the hole volume.
 used.clear()
 a = shapes.box("a", (0.04, 0.04, 0.02), (0, 0, 0.01))
 shapes.boolean(a, shapes.cylinder("hole", 0.005, 0.03, (0, 0, 0.01), segments=32))
-if used != ["MANIFOLD"]:
-    fail.append(f"closed solids should use MANIFOLD only, used {used}")
+if used != [preferred_solver]:
+    fail.append(f"closed solids should use {preferred_solver} only, used {used}")
 expect = 0.04 * 0.04 * 0.02 - 3.14159 * 0.005 ** 2 * 0.02
 if abs(volume(a) - expect) > expect * 0.01:
-    fail.append(f"manifold cut volume {volume(a):.3e} != {expect:.3e}")
+    fail.append(f"closed-solid cut volume {volume(a):.3e} != {expect:.3e}")
 
 # 2. joined overlapping solids are not watertight: EXACT fallback, cut still happens
 used.clear()
@@ -63,11 +64,11 @@ if "EXACT" not in used:
 if len(b.data.polygons) <= nb:
     fail.append("fallback cut did not change the mesh")
 
-# 3. cutter that misses the target: MANIFOLD no-op is accepted, no retry
+# 3. A cutter missing the target needs only one supported-solver attempt.
 used.clear()
 c = shapes.box("c", (0.02, 0.02, 0.02), (0, 0, 0.01))
 shapes.boolean(c, shapes.box("far", (0.01, 0.01, 0.01), (0.2, 0.2, 0.2)))
-if used != ["MANIFOLD"]:
+if used != [preferred_solver]:
     fail.append(f"non-overlapping cutter should not retry, used {used}")
 
 # 4. no orphan meshes left behind by the retry path
