@@ -8,7 +8,7 @@ with a power glow, rubber feet, side vent slots, and five animation clips.
 import os
 import sys
 
-SKILL_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+SKILL_DIR = os.environ.get("MAKETWIN_SKILL_DIR", os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
 sys.path.insert(0, os.path.join(SKILL_DIR, "scripts"))
 from c3d import anim, core, joints, materials, shapes  # noqa: E402
 

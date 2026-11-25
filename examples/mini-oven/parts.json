@@ -1,0 +1,304 @@
+{
+  "schemaVersion": 1,
+  "units": "metres",
+  "coordinateSystem": "glTF-Y-up",
+  "product": "Illustrative mini oven",
+  "assemblies": [
+    {
+      "id": "enclosure",
+      "label": "Enclosure",
+      "purpose": "Enclose and support the fixture."
+    },
+    {
+      "id": "door",
+      "label": "Door",
+      "purpose": "Open and close the cavity."
+    },
+    {
+      "id": "controls",
+      "label": "Controls",
+      "purpose": "Demonstrate controls and an indicator."
+    },
+    {
+      "id": "cavity",
+      "label": "Cavity",
+      "purpose": "Hold the illustrative turntable."
+    }
+  ],
+  "parts": [
+    {
+      "id": "body",
+      "label": "Housing",
+      "function": "Encloses the illustrative cooking cavity and supports the controls.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "enclosure",
+      "parent": null,
+      "interfaces": [],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "control_panel",
+      "label": "Control panel",
+      "function": "Carries the timer, button and indicator.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "controls",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "door",
+      "label": "Door",
+      "function": "Closes the front opening of the illustrative cavity.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "door",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "unknown",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "door_glass",
+      "label": "Door window",
+      "function": "Shows the cavity through the door opening.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "door",
+      "parent": "door",
+      "interfaces": [
+        {
+          "target": "door",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "unknown",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "door_handle",
+      "label": "Door handle",
+      "function": "Provides a grip for opening the door.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "door",
+      "parent": "door",
+      "interfaces": [
+        {
+          "target": "door",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "unknown",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "timer_knob",
+      "label": "Timer knob",
+      "function": "Demonstrates a rotary control; no real timing behavior is simulated.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "controls",
+      "parent": "control_panel",
+      "interfaces": [
+        {
+          "target": "control_panel",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "unknown",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "power_button",
+      "label": "Start button",
+      "function": "Demonstrates a press input; no heating is simulated.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "controls",
+      "parent": "control_panel",
+      "interfaces": [
+        {
+          "target": "control_panel",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "unknown",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "power_led",
+      "label": "Power light",
+      "function": "Represents an indicator lens.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "controls",
+      "parent": "control_panel",
+      "interfaces": [
+        {
+          "target": "control_panel",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "power_led_glow",
+      "label": "Indicator overlay",
+      "function": "Provides a display-only emissive overlay, not an additional physical component.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "controls",
+      "parent": "power_led",
+      "interfaces": [
+        {
+          "target": "power_led",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "turntable",
+      "label": "Glass turntable",
+      "function": "Supports an illustrative load and demonstrates rotation and removal.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "cavity",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "unknown",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "foot_1",
+      "label": "Foot 1",
+      "function": "Supports the housing above the counter.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "enclosure",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "foot_2",
+      "label": "Foot 2",
+      "function": "Supports the housing above the counter.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "enclosure",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "foot_3",
+      "label": "Foot 3",
+      "function": "Supports the housing above the counter.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "enclosure",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    },
+    {
+      "id": "foot_4",
+      "label": "Foot 4",
+      "function": "Supports the housing above the counter.",
+      "evidence": "illustrative",
+      "evidenceNote": "Synthetic example in PLAN.md and build.py; no photos, manual or measured product.",
+      "assembly": "enclosure",
+      "parent": "body",
+      "interfaces": [
+        {
+          "target": "body",
+          "type": "attaches to",
+          "evidence": "illustrative"
+        }
+      ],
+      "motion": {
+        "kind": "fixed",
+        "note": "Demonstration animation only; no real product movement specification."
+      }
+    }
+  ]
+}

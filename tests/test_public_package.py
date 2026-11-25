@@ -20,3 +20,22 @@ class PublicPackageTests(unittest.TestCase):
     p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(b'private fixture')
    names={p.relative_to(root).as_posix() for p in module.skill_files(root)}
    self.assertEqual(names,{'SKILL.md'})
+
+ def test_archive_has_version_preview_licenses_and_stable_root(self):
+  import json, zipfile
+  from unittest.mock import patch
+  with tempfile.TemporaryDirectory() as folder:
+   root=Path(folder)/'arbitrary-checkout-name'
+   for name in ['SKILL.md','VERSION','templates/viewer/model.glb','templates/viewer/model.manifest.json','templates/viewer/explorer.json','templates/viewer/EARCUT-LICENSE.txt','templates/viewer/vendor-sources.json','secret-case/photo.png','examples/generic/model.glb']:
+    p=root/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_text('1.0.1' if name=='VERSION' else 'fixture')
+   out=Path(folder)/'release.zip'
+   with patch.object(module,'ROOT',root):module.package(out)
+   with zipfile.ZipFile(out) as z:
+    prefix='mechanical-explorer-test/'
+    self.assertEqual(z.read(prefix+'VERSION'),b'1.0.1')
+    for name in ['model.glb','model.manifest.json','explorer.json','EARCUT-LICENSE.txt','vendor-sources.json']:
+     self.assertIn(prefix+'templates/viewer/'+name,z.namelist())
+    self.assertFalse(any('secret-case' in n or n.endswith('examples/generic/model.glb') for n in z.namelist()))
+    manifest=json.loads(z.read(prefix+'PACKAGE-MANIFEST.json'))
+    self.assertEqual(manifest['version'],'1.0.1')
+    for name in manifest['files']:self.assertIn(prefix+name,z.namelist())

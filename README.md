@@ -4,7 +4,7 @@
 
 **Your digital product explorer.**
 
-[![CI](https://github.com/MicrochainToken/MakeTwin/actions/workflows/ci.yml/badge.svg)](https://github.com/MicrochainToken/MakeTwin/actions/workflows/ci.yml) [![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](CHANGELOG.md) [![Blender](https://img.shields.io/badge/Blender-4.2%2B-orange.svg)](https://www.blender.org) [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg)](requirements.txt) [![Viewer](https://img.shields.io/badge/viewer-Three.js-000000.svg)](https://threejs.org)
+[![CI](https://github.com/MicrochainToken/MakeTwin/actions/workflows/ci.yml/badge.svg)](https://github.com/MicrochainToken/MakeTwin/actions/workflows/ci.yml) [![Version](https://img.shields.io/badge/version-1.0.1-green.svg)](CHANGELOG.md) [![Blender](https://img.shields.io/badge/Blender-4.2%2B-orange.svg)](https://www.blender.org) [![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab.svg)](requirements.txt) [![Viewer](https://img.shields.io/badge/viewer-Three.js-000000.svg)](https://threejs.org)
 
 </div>
 
@@ -29,6 +29,8 @@ The skill's install ID is `mechanical-explorer-test`, kept for compatibility. Mo
 | Pillow | Preparing product photos; included in `requirements.txt`. |
 | Poppler | Reading PDF manuals: `pdftoppm`, `pdftotext`, and `pdfinfo`. |
 | A coding agent with file and shell access | Reading the skill and authoring the model. It uses your own model access. |
+
+Install Blender from [blender.org](https://www.blender.org/download/) and put it on PATH (or set `BLENDER` below). On Debian/Ubuntu, install `python3-venv` if `python3 -m venv` reports missing ensurepip.
 
 From this folder, on macOS/Linux:
 
@@ -68,7 +70,26 @@ On Linux, use the path to your Blender executable. On Windows PowerShell, use `$
 
 </details>
 
-Install Poppler with your operating system’s package manager; on macOS, `brew install poppler`. `doctor.py` reports the tools it finds and makes no model/provider calls. Node.js 22+ is needed for the viewer regression tests. Neither is needed to open a finished viewer.
+Install Poppler with your operating system’s package manager; on macOS, `brew install poppler`. `doctor.py` reports the tools it finds and makes no model/provider calls. Node.js 22+ is needed for the viewer regression tests. Poppler and Node.js are not needed to open a finished viewer.
+
+## Try the bundled example
+
+From this skill folder after setup, choose a new empty output directory:
+
+```sh
+python3 scripts/doctor.py --smoke --out ../maketwin-example
+python3 -m http.server 8000 --bind 127.0.0.1 --directory ../maketwin-example
+```
+
+Open http://127.0.0.1:8000. The smoke run builds, checks and exports the synthetic
+mini oven, copies the complete viewer, and validates its bundled `parts.json` and
+`explorer.json`. It needs Blender but makes no model calls. The oven is a tooling
+example, not a reconstruction of a real product or a certified appliance.
+
+Smoke output does not include review renders or a human acceptance report. For
+agent-generated deliveries, follow SKILL.md's full render/review workflow. To
+rebuild the copied example source, set `MAKETWIN_SKILL_DIR` to this skill folder
+and run `scripts/blender.sh -b --python ../maketwin-example/build.py -- --out ../maketwin-example/model.blend`.
 
 ## Make your first model
 
@@ -147,14 +168,14 @@ Choose a new output directory/file:
 
 ```sh
 bash tests/run_tests.sh ./test-output
-python3 scripts/package_showcase.py --out ./maketwin-1.0.0.zip
+python3 scripts/package_showcase.py --out ./maketwin-1.0.1.zip
 ```
 
-These commands make no model calls. The suite includes Blender fixtures, export guards, metadata checks, and viewer tests. The ZIP includes the complete reusable skill and viewer assets.
+These commands make no model calls. The suite includes Blender fixtures, export guards, metadata checks, and viewer tests. The ZIP uses the stable `mechanical-explorer-test/` root and includes VERSION, documentation, examples, tests, the portable viewer and its bundled preview. It excludes local inputs, outputs, caches and Git history.
 
 </details>
 
-Retain the bundled [Three.js license](templates/viewer/THREE-LICENSE.txt) and vendor source records when distributing the viewer. Runtime origins and attribution are recorded in [PROVENANCE.md](PROVENANCE.md).
+Retain the bundled [Three.js license](templates/viewer/THREE-LICENSE.txt), the embedded [Earcut license](templates/viewer/EARCUT-LICENSE.txt), and vendor source records when distributing the viewer. Runtime origins and attribution are recorded in [PROVENANCE.md](PROVENANCE.md).
 
 ## Repository layout
 

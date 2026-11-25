@@ -15,4 +15,4 @@ Keep descriptions concise and product-specific. A screw secures a named cover; a
 
 ## Delivery checks
 
-Run `python scripts/validate_parts.py --manifest model.manifest.json --parts parts.json --out parts-audit.json` after final export. The supervisor also validates coverage. Review a representative mechanism, a seal and repeated hardware against the model. Exported IDs, function records and viewer selections must agree. Check separately whether geometry, motion, semantic coverage, explosion metadata and browser interaction passed; a schema pass does not prove functional correctness.
+Run `python scripts/validate_parts.py --manifest model.manifest.json --parts parts.json --out parts-audit.json` after final export. Run this explicitly; delivery verification checks model/export/render consistency but does not replace the semantic or take-apart validators. Review a representative mechanism, a seal and repeated hardware against the model. Exported IDs, function records and viewer selections must agree. Check separately whether geometry, motion, semantic coverage, explosion metadata and browser interaction passed; a schema pass does not prove functional correctness.

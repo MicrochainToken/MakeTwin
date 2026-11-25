@@ -1,6 +1,6 @@
 # Animations
 
-Every motion is a **joint** (where and how a part moves) plus a **clip** (when it moves). The rest pose, value 0, is always closed / off / assembled, so every clip starts from the same model and can be played backwards to undo it.
+Every motion is a **joint** (where and how a part moves) plus a **clip** (when it moves). The rest pose, value 0, is always closed / off / assembled, so independent clips start from the same model (guides may explicitly declare a different initial state) and can be played backwards to undo it.
 
 ## Joints
 
@@ -45,7 +45,7 @@ one `sequence` entry rather than adding another preset on the same joint/clip.
 
 ## Prerequisites, extraction and held poses
 
-Build each clip from assembled rest, including every prerequisite inside that clip.
+Build each independent clip from assembled rest, including every prerequisite inside that clip.
 Do not rely on the viewer playing `open_lid` before `remove_insert`. Avoid incidental
 parent chains: moving an upper rotor must not carry an independently removed lower
 rotor. Parent only parts that really remain attached. A removable insert must clear

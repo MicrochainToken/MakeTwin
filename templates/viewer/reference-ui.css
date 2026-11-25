@@ -239,3 +239,19 @@ main{background:transparent!important}
     transform:none;
   }
 }
+
+/* Keep download and playback controls inside narrow phone viewports. */
+@media(max-width:700px){
+  .titlebar{flex-wrap:wrap!important}
+  .titlebar .download-actions{width:100%;min-width:0;flex-wrap:wrap!important;margin-left:0!important}
+  .controls{grid-template-columns:40px 40px minmax(0,1fr) 44px!important;gap:12px!important}
+  .controls>*,.controls>button,.controls .step-buttons button{zoom:1!important}
+  .controls #tour{grid-column:1 / -1;grid-row:1;font-size:14px!important;padding:10px!important}
+  .controls #replay{grid-column:1;grid-row:2}
+  .controls #play{grid-column:2;grid-row:2}
+  .controls .timeline-wrap{grid-column:3;grid-row:2;min-width:0!important;width:100%}
+  .controls #speed{grid-column:4;grid-row:2;padding:10px 4px!important;font-size:12px!important}
+  .controls #replay,.controls #play,.controls .back-button{width:40px!important;height:40px!important;font-size:22px!important}
+  .controls .step-buttons{grid-column:1 / -1;grid-row:3;width:100%}
+  .controls .next-button{min-width:0!important;font-size:14px!important;padding:10px!important}
+}

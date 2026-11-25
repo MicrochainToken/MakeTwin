@@ -1,0 +1,70 @@
+name: Blender and browser integration
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'scripts/**'
+      - 'examples/**'
+      - 'templates/viewer/**'
+      - 'tests/**'
+      - '.github/workflows/integration.yml'
+
+jobs:
+  integration:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    env:
+      BLENDER_VERSION: '4.2.23'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install dependencies
+        run: |
+          python -m pip install -r requirements.txt
+          sudo apt-get update
+          sudo apt-get install -y libxi6 libxrender1 libxkbcommon0 libsm6 libgl1 libegl1
+          npm install --no-save --package-lock=false playwright@1.65.1
+          npx playwright install --with-deps chromium
+      - name: Install pinned Blender
+        working-directory: ${{ runner.temp }}
+        run: |
+          curl --fail --retry 3 -O "https://download.blender.org/release/Blender4.2/blender-${BLENDER_VERSION}-linux-x64.tar.xz"
+          curl --fail --retry 3 -O "https://download.blender.org/release/Blender4.2/blender-${BLENDER_VERSION}.sha256"
+          grep "blender-${BLENDER_VERSION}-linux-x64.tar.xz" "blender-${BLENDER_VERSION}.sha256" | sha256sum --check -
+          tar -xf "blender-${BLENDER_VERSION}-linux-x64.tar.xz"
+          echo "BLENDER=${RUNNER_TEMP}/blender-${BLENDER_VERSION}-linux-x64/blender" >> "$GITHUB_ENV"
+      - name: Full regression suite
+        run: bash tests/run_tests.sh "$RUNNER_TEMP/maketwin-tests"
+      - name: First-model smoke and browser
+        run: |
+          python scripts/doctor.py --smoke --out "$RUNNER_TEMP/maketwin-example"
+          python -m http.server 8000 --bind 127.0.0.1 --directory "$RUNNER_TEMP/maketwin-example" > "$RUNNER_TEMP/viewer-server.log" 2>&1 &
+          viewer_pid=$!
+          trap 'kill "$viewer_pid"' EXIT
+          python - <<'PY'
+          import time, urllib.request
+          for attempt in range(50):
+              try:
+                  urllib.request.urlopen('http://127.0.0.1:8000', timeout=1).close()
+                  break
+              except OSError:
+                  time.sleep(.1)
+          else:
+              raise SystemExit('Viewer server did not start')
+          PY
+          node tests/browser_smoke.cjs http://127.0.0.1:8000 "$RUNNER_TEMP/maketwin-browser"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: maketwin-integration-evidence
+          path: |
+            ${{ runner.temp }}/maketwin-tests
+            ${{ runner.temp }}/maketwin-example
+            ${{ runner.temp }}/maketwin-browser
+            ${{ runner.temp }}/viewer-server.log

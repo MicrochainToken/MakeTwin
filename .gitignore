@@ -14,3 +14,5 @@ output/
 !templates/viewer/model.glb
 test-output/
 *.zip
+node_modules/
+browser-output/

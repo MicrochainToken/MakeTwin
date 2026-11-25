@@ -1,10 +1,10 @@
-# Test take-apart presentation
+# Take-apart presentation
 
 ## Why this differs from independent clips
 
 The visitor should see a relationship: a cover clears, its assembly opens, the camera follows, and the inner mechanism becomes the next focal point. Reassemble in reverse stage order. Use the same known whole, not unrelated objects in each shot. For a standard explanation, prioritize a good whole and a few convincing mechanisms. For a requested all-component spectacle, follow dense-explosion.md and detail plausible internal component families after saving that baseline.
 
-A staged exploded **layout** may use separation distances chosen for readability. Declare it illustrative and avoid describing it as a wrench-by-wrench service procedure. If authoring a physical extraction animation, show prerequisites and check the real swept path. Guessed internals are welcome in this test profile, provided their assumptions and limits are visible.
+A staged exploded **layout** may use separation distances chosen for readability. Declare it illustrative and avoid describing it as a wrench-by-wrench service procedure. If authoring a physical extraction animation, show prerequisites and check the real swept path. Approximate internals are permitted, provided their assumptions and limits are visible.
 
 ## explorer.json contract
 

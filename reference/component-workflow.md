@@ -33,7 +33,7 @@ Use the caller's scope and budget; default to one automatic repair round for an 
 trial, rather than an open-ended polish loop. Preserve a usable partial checkpoint when
 stopping. Treat product evidence as new: do not consult saved evaluations, old product build scripts or a previous product storyboard. Reusable helper guides and the generic worked examples are tooling, not product-specific evidence.
 
-Work in a project folder (default `./c3d-<product>/`). Keep every step reproducible: the model must be rebuilt from `build.py` alone.
+Work in a project folder (default `./c3d-<product>/`). Keep every step reproducible: retain `build.py` and every referenced helper or companion source. Record the skill version and its location needed to rebuild.
 
 ### 1. Plan (always, before any geometry)
 
@@ -42,7 +42,7 @@ Write `PLAN.md` with:
 1. **Overall size** in metres (W × D × H). Use given dimensions; otherwise estimate from a known reference in the photos (a hand, a power plug, a standard screw, a door) and say which one. Write down the estimate's uncertainty.
 2. **Parts list.** One row per part the user could see, touch, remove or that moves: id, name, approximate size, shape strategy (see step 2), material preset/colour/opacity, evidence label, parent part. Mark optional items as included or omitted; included items remain registered even if hidden. Never hide unregistered meshes at zero scale to remove check errors.
 3. **Mating:** how each part attaches (sits on, clips into, hinged at, slides in). Record the receiving pocket/hole, wall thickness, insertion depth and numerical clearance for each fitted or moving interface. Real products have **gaps and seams** (typically 0.5–2 mm between panels). A button needs a pocket, an insert needs a cavity, and a gasket needs its own seat; intersecting solid blocks are insufficient.
-4. **Motions:** every user-visible motion with type (hinge, slide, press, turn, light), axis, pivot location and range. For removal/service clips, give an ordered timeline: prerequisite release/opening, extraction direction, any later lateral move, which parts travel together, and the final pose held by each joint. Every clip must work independently from assembled rest. Read [reference/animations.md](animations.md).
+4. **Motions:** every user-visible motion with type (hinge, slide, press, turn, light), axis, pivot location and range. For removal/service clips, give an ordered timeline: prerequisite release/opening, extraction direction, any later lateral move, which parts travel together, and the final pose held by each joint. Every independent clip must work from assembled rest; guides may declare a nonzero initial state explicitly. Read [reference/animations.md](animations.md).
 5. **Details that make it look real:** seams, chamfers, vents, buttons, labels, screws, rubber feet, transparent windows. Order them by how visible they are.
 6. **Assumptions and unknowns.**
 7. **Manual storyboard.** A primary `how_to_use` continuous guide with ordered instructions, manual page/figure evidence, initial state, action durations, end holds and real-world pauses. Preserve state between steps. Independent clips are secondary exploration controls. Read [reference/manual-guides.md](manual-guides.md). **Do not plan or author cameras here**: cameras are a separate pass after the model is finished (step 8).
@@ -102,11 +102,11 @@ Fix the most visible problem first. Re-run steps 2–4 within the agreed repair/
 scripts/blender.sh -b model.blend --python scripts/export_glb.py -- --out model.glb
 ```
 
-This writes `model.glb` (parts as named nodes, one animation clip per motion) and `model.manifest.json` (parts, materials, clips, check summary and source-file hash). Export requires a matching, zero-error check report. Use `--partial` only to save an explicitly unfinished checkpoint; its manifest records the limitations. After final renders/export, run `python3 SKILL_DIR/scripts/verify_delivery.py PROJECT_DIR --report PROJECT_DIR/delivery-report.json`. A technical pass is not human acceptance or proof of visual fidelity. For a quick look, copy `templates/viewer/index.html` and `templates/viewer/guide-player.js` next to `model.glb` and its manifest and run `python3 -m http.server --bind 127.0.0.1`; it lists the clips as play/reverse buttons.
+This writes `model.glb` (parts as named nodes, one animation clip per motion) and `model.manifest.json` (parts, materials, clips, check summary and source-file hash). Export requires a matching, zero-error check report. Use `--partial` only to save an explicitly unfinished checkpoint; its manifest records the limitations. After final renders/export, run `python3 SKILL_DIR/scripts/verify_delivery.py PROJECT_DIR --report PROJECT_DIR/delivery-report.json`. A technical pass is not human acceptance or proof of visual fidelity. The exporter copies the complete portable viewer, including its libraries and licenses. Serve that output folder with `python3 -m http.server --bind 127.0.0.1`; do not copy only the HTML or one JavaScript file.
 
 Give the user: the GLB, the viewer, `views.png`, the clip sheets, and a short note of assumptions and known limitations from `PLAN.md` and `REVIEW.md`.
 
-### 8. Camera pass (separate, only after the model is finished)
+### 7. Camera pass (separate, only after the model is finished)
 
 Spend the modeling budget on geometry and motion first. Directed cameras are presentation only and come last, ideally in their own session with its own small budget.
 

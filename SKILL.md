@@ -3,9 +3,9 @@ name: mechanical-explorer-test
 description: Create detailed reusable Blender/glTF product models with separate named parts, function and relationship metadata, and a compelling take-apart viewer demo. Use product images and manuals, with explicit evidence labels for inferred internals. The reusable model and metadata are the main deliverables.
 ---
 
-# Mechanical explorer — detailed reusable model
+# MakeTwin — detailed reusable model
 
-Build an impressive, recognizable product whose separate named parts can be reused by other agents. The core deliverable is the model plus semantic metadata; the viewer demonstrates those assets. Read [reusable part metadata](reference/reusable-parts.md) when planning and before delivery. Keep the whole silhouette faithful to the supplied photos; use the manual for structure and known motion. Where hidden details are missing, make a coherent mechanical approximation instead of stopping to ask about every unknown. Label the approximation. This 1.0 release is a visual modeling workflow. Label unverified geometry and preserve its validation status; do not present it as a certified engineering reconstruction.
+Build an impressive, recognizable product whose separate named parts can be reused by other agents. The core deliverable is the model plus semantic metadata; the viewer demonstrates those assets. Read [reusable part metadata](reference/reusable-parts.md) when planning and before delivery. Keep the whole silhouette faithful to the supplied photos; use the manual for structure and known motion. Where hidden details are missing, make a coherent mechanical approximation instead of stopping to ask about every unknown. Label the approximation. This 1.0.1 release is a visual modeling workflow. Label unverified geometry and preserve its validation status; do not present it as a certified engineering reconstruction.
 
 ## Execution route
 
