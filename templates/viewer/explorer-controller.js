@@ -74,6 +74,7 @@ export async function installExplorer(state, panel, modelFile = 'model.glb'){
   root.updateMatrixWorld(true);
   for(const r of records){r.position.copy(r.obj.position);r.world=r.obj.getWorldPosition(new THREE.Vector3());}
   active=true;
+  viewerPanel?.setAttribute('data-inspecting', 'true');
  }
  function restore(){
   if(!active)return;
@@ -81,6 +82,7 @@ export async function installExplorer(state, panel, modelFile = 'model.glb'){
   renderer.localClippingEnabled=hadClipping;root.updateMatrixWorld(true);
   active=false;assembling=false;amount=target=0;slider.value='0';syncButton();focus=null;selected='';mode='context';select.value='';
   updateDotOpacity(0);
+  viewerPanel?.setAttribute('data-inspecting', 'false');
   panel.querySelectorAll('[data-mode]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.mode==='context')));
   evidence.textContent='Whole machine assembled. Use the guide controls to resume playback.';
  }
